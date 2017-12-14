@@ -20,8 +20,8 @@ export const actionCase =
 export const createAction =
   type => (payload = {}, meta = {}) => ({ type, payload, meta });
 
-export const injectTracker =
-  (tracker, middlewares) => middlewares.map(m => m(tracker));
+export const injectMeteor =
+  (Meteor, middlewares) => middlewares.map(m => m(Meteor));
 
 export const errorWith = x => (f, msg) => {
   if (!f(x)) {

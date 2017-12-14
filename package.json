@@ -1,16 +1,13 @@
 {
-  "name": "meteor-redux-middlewares",
-  "version": "3.0.6",
-  "description": "Middlewares to sync meteor reactive sources with redux store",
+  "name": "redux-store-for-electron-connect-meteor",
+  "version": "0.0.1",
+  "description": "Middlewares to sync electron-connect-meteor sources with redux store. Thank @samybob1 for meteor-redux-middleware",
   "main": "lib/index.js",
   "repository": {
-    "url": "git@github.com:samybob1/meteor-redux-middlewares.git",
+    "url": "https://github.com/nntai/redux-store-for-electron-connect-meteor",
     "type": "git"
   },
-  "author": "Samy Laumonier <samy.laumonier@gmail.com> (https://github.com/samybob1)",
-  "contributors": [
-    "Kyle Chamberlain <kchamb3@gmail.com> (https://github.com/Koleok)"
-  ],
+  "author": "Tai Nguyen <tainnt85@gmail.com> (https://github.com/nntai)",
   "license": "MIT",
   "keywords": [
     "action",
@@ -19,13 +16,11 @@
     "reactive",
     "redux",
     "subscription",
-    "tracker"
+    "tracker",
+    "electron",
+    "electron-connect-meteor",
+    "react-native-meteor"
   ],
-  "homepage": "https://github.com/samybob1/meteor-redux-middlewares",
-  "bugs": {
-    "url": "https://github.com/samybob1/meteor-redux-middlewares/issues",
-    "email": "samy.laumonier@gmail.com"
-  },
   "scripts": {
     "test:watch": "npm test -- --watch",
     "test": "./node_modules/.bin/jest --config jest.json",

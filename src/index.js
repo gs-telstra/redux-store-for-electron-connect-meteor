@@ -1,6 +1,6 @@
 import subscriptionsMiddleware from './subscriptions';
 import sourcesMiddleware from './sources';
-import { injectTracker } from './utils';
+import { injectMeteor } from './utils';
 
 const middlewares = [
   subscriptionsMiddleware,
@@ -9,8 +9,8 @@ const middlewares = [
 
 export * from './actions';
 
-export default (tracker) => {
-  const [subscriptions, sources] = injectTracker(tracker, middlewares);
+export default (Meteor) => {
+  const [subscriptions, sources] = injectMeteor(Meteor, middlewares);
 
   return {
     subscriptions,

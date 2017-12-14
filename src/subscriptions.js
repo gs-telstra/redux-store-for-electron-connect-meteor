@@ -27,7 +27,7 @@ const stopSubscription = action => {
   }
 };
 
-export default tracker => ({ dispatch }) => next => action => {
+export default Meteor => ({ dispatch }) => next => action => {
   const throwIfNot = errorWith(action);
 
   if (action.type === STOP_SUBSCRIPTION) {
@@ -55,13 +55,27 @@ export default tracker => ({ dispatch }) => next => action => {
       );
 
       stopSubscription(action);
-
+      const { Tracker: tracker } = Meteor;
+      const Data = Meteor.getData();
       const { key, subscribe } = action.payload;
       const subscription = subscribe();
       const { subscriptionId } = subscription;
-
+      const _meteorDataDep = new tracker.Dependency();
+      const _meteorDataChangedCallback = (msg)=>{
+        if (typeof msg === 'object' && key) {
+          const dbChanged = Object.keys(msg);
+          const findId = dbChanged.findIndex(item => item === key);
+          if (findId !== -1 ){
+            _meteorDataDep.changed();        
+          }
+        } else {
+          _meteorDataDep.changed();          
+        }
+      }
+      Data.onChange(_meteorDataChangedCallback);      
       subscriptions[key] = subscription;
       computations[subscriptionId] = tracker.autorun(() => {
+        _meteorDataDep.depend();   
         const ready = subscription.ready();
 
         if (ready) {

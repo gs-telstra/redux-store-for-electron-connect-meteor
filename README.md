@@ -1,7 +1,7 @@
-# meteor-redux-middlewares [![Build Status](https://travis-ci.org/samybob1/meteor-redux-middlewares.svg?branch=master)](https://travis-ci.org/samybob1/meteor-redux-middlewares) [![Codecov](https://img.shields.io/codecov/c/github/samybob1/meteor-redux-middlewares.svg)](https://codecov.io/gh/samybob1/meteor-redux-middlewares)
 
-Middlewares to sync meteor reactive sources with redux store.
+Middlewares to sync electron-connect-meteor sources with redux store.
 
+- Folk and modify form [meteor-redux-middlewares](https://github.com/samybob1/meteor-redux-middlewares)
 - [Live demo](https://meteor-redux-middlewares-demo.herokuapp.com)
 - [Demo sources on GitHub](https://github.com/samybob1/meteor-redux-middlewares-demo)
 - [Package on npm](https://www.npmjs.com/package/meteor-redux-middlewares)
@@ -12,15 +12,11 @@ Middlewares to sync meteor reactive sources with redux store.
 
 ##### Using npm
 
-`npm i meteor-redux-middlewares --save`
+`npm i redux-store-for-electron-connect-meteor --save`
 
 ##### Using yarn
 
-`yarn add meteor-redux-middlewares`
-
-##### Using meteor
-
-`meteor add samy:redux-middlewares`
+`yarn add redux-store-for-electron-connect-meteor`
 
 
 # Table of contents
@@ -34,17 +30,12 @@ Middlewares to sync meteor reactive sources with redux store.
 - [Credits](#credits)
 
 
-# Example of use
-
-All the following code is available on the [demo repository](https://github.com/samybob1/meteor-redux-middlewares-demo).
-
-
 ##### Step 1: apply middlewares
 
 ```js
 // File '/imports/store/index.js'
-import { Tracker } from 'meteor/tracker';
-import createReactiveMiddlewares from 'meteor-redux-middlewares';
+import Meteor from 'electron-connect-meteor';
+import createReactiveMiddlewares from 'redux-store-for-electron-connect-meteor';
 // or: import createReactiveMiddlewares from 'meteor/samy:redux-middlewares';
 import { applyMiddleware, createStore, compose } from 'redux';
 
@@ -62,7 +53,7 @@ import rootReducer from '/imports/reducers';
 const {
   sources,
   subscriptions,
-} = createReactiveMiddlewares(Tracker);
+} = createReactiveMiddlewares(Meteor);
 
 const store = createStore(rootReducer, compose(
   applyMiddleware(sources, subscriptions, thunk, logger)
@@ -76,8 +67,8 @@ export default store;
 
 ```js
 // File '/imports/actions/user/load.js'
-import { Meteor } from 'meteor/meteor';
-import { registerReactiveSource } from 'meteor-redux-middlewares';
+import Meteor from 'electron-connect-meteor';
+import { registerReactiveSource } from 'redux-store-for-electron-connect-meteor';
 
 export const USER_REACTIVE_SOURCE_CHANGED = 'USER_REACTIVE_SOURCE_CHANGED';
 
@@ -92,9 +83,8 @@ This action will automatically be intercepted by the `sources` middleware. Your 
 
 ```js
 // File '/imports/actions/home/posts/load.js'
-import { Meteor } from 'meteor/meteor';
-import { startSubscription } from 'meteor-redux-middlewares';
-import { Posts } from '/imports/api/collections/posts';
+import Meteor from 'electron-connect-meteor';
+import { startSubscription } from 'redux-store-for-electron-connect-meteor';
 
 export const HOME_POSTS_SUBSCRIPTION_READY = 'HOME_POSTS_SUBSCRIPTION_READY';
 export const HOME_POSTS_SUBSCRIPTION_CHANGED = 'HOME_POSTS_SUBSCRIPTION_CHANGED';
@@ -103,7 +93,7 @@ export const HOME_POSTS_SUB = 'home.posts';
 export const loadHomePosts = () =>
   startSubscription({
     key: HOME_POSTS_SUB,
-    get: () => Posts.find().fetch(),
+    get: () => Meteor.collections('Posts').find(),
     subscribe: () => Meteor.subscribe(HOME_POSTS_SUB),
   });
 ```
@@ -138,7 +128,7 @@ With the **reactive sources**, we can access to the data returned by our `get` f
 
 ```js
 // File '/imports/reducers/home.js'
-import { STOP_SUBSCRIPTION } from 'meteor-redux-middlewares';
+import { STOP_SUBSCRIPTION } from 'redux-store-for-electron-connect-meteor';
 
 import {
   HOME_POSTS_SUBSCRIPTION_READY,
@@ -185,7 +175,7 @@ You can stop a subscription by dispatching the `stopSubscription` action, for ex
 
 ```js
 import { connect } from 'react-redux';
-import { stopSubscription } from 'meteor-redux-middlewares';
+import { stopSubscription } from 'redux-store-for-electron-connect-meteor';
 import { loadHomePosts, HOME_POSTS_SUB } from '/imports/actions/home/posts/load';
 import { HomePageComponent } from '/imports/ui/components/pages/HomePageComponent';
 
@@ -216,8 +206,8 @@ export const HomePageContainer = connect(
 If you need to pass some extra data to the reducer with the `subscriptions` middleware when your subscription's ready state changes, you can add an `onReadyData` attribute in your action:
 
 ```js
-import { Meteor } from 'meteor/meteor';
-import { startSubscription } from 'meteor-redux-middlewares';
+import Meteor from 'electron-connect-meteor';
+import { startSubscription } from 'redux-store-for-electron-connect-meteor';
 import { Posts } from '/imports/api/collections/posts';
 
 export const HOME_POSTS_SUBSCRIPTION_READY = 'HOME_POSTS_SUBSCRIPTION_READY';
